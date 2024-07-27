@@ -1,15 +1,10 @@
 import streamlit as st
 import pandas as pd
-import io
-import dotenv, os
 import requests
 from dune_client.types import QueryParameter
 from dune_client.client import DuneClient
 from dune_client.query import QueryBase
 from datetime import datetime, timedelta
-import gate_api
-from gate_api import ApiClient, Configuration, SpotApi
-from gate_api.rest import ApiException
 
 
 dune = DuneClient(
