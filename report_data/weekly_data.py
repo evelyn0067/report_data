@@ -6,6 +6,7 @@ from dune_client.client import DuneClient
 from dune_client.query import QueryBase
 import io
 from datetime import datetime, timedelta
+import xlsxwriter
 
 
 dune = DuneClient(
@@ -96,12 +97,6 @@ def convert_df_to_csv(df):
 
 # Function to convert multiple DataFrames to a single CSV file
 def convert_multiple_dfs_to_csv(dfs, names):
-    print("Converting DataFrames to Excel:")
-    print(f"DataFrames: {len(dfs)}, Names: {len(names)}")
-    
-    for df, name in zip(dfs, names):
-        print(f"Processing: {name}, Shape: {df.shape}")
-        
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
         for df, name in zip(dfs, names):
@@ -147,28 +142,28 @@ st.download_button(
 )
 
 st.download_button(
-    label="Download DataFrame ETF Data as CSV",
+    label="Download DataFrame BTC ETF Data as CSV",
     data=csv2,
     file_name='btc_etf_data.csv',
     mime='text/csv',
 )
 
 st.download_button(
-    label="Download DataFrame AHR999 as CSV",
+    label="Download DataFrame ETH ETF Data as CSV",
     data=csv3,
     file_name='eth_etf_data.csv',
     mime='text/csv',
 )
 
 st.download_button(
-    label="Download DataFrame AHR999 as CSV",
+    label="Download DataFrame fear_greed as CSV",
     data=csv4,
     file_name='fear_greed.csv',
     mime='text/csv',
 )
 
 st.download_button(
-    label="Download DataFrame AHR999 as CSV",
+    label="Download DataFrame bubble_index as CSV",
     data=csv5,
     file_name='bubble_index.csv',
     mime='text/csv',
