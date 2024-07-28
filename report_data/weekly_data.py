@@ -60,11 +60,12 @@ headers = {
 response = requests.get(url, headers=headers)
 data = response.json()['data']
 df = pd.DataFrame(data)
+df['dates'] = pd.to_datetime(df['dates'], unit='ms')
 fear_greed = df.tail(360)
 
 
 
-url = "https://open-api-v3.coinglass.com/api/index/bitcoin-rainbow-chart"
+url = "https://open-api-v3.coinglass.com/api/index/bitcoin-bubble-index"
 
 headers = {
     "accept": "application/json",
@@ -74,7 +75,7 @@ headers = {
 response = requests.get(url, headers=headers)
 data = response.json()['data']
 df = pd.DataFrame(data)
-btc_rainbow = df.tail(360)
+bubble_index = df.tail(360)
 
 
 url = "https://open-api-v3.coinglass.com/api/index/ahr999"
@@ -117,53 +118,17 @@ st.write("DataFrame fear greed Data")
 st.dataframe(fear_greed)
 
 st.write("DataFrame BTC RAINBOW")
-st.dataframe(btc_rainbow)
+st.dataframe(bubble_index)
 
 st.write("DataFrame BTC AHR999")
 st.dataframe(arh999)
-
-st.write("Gate.io BTC 价格信息")
-configuration = Configuration(
-    host = "https://api.gateio.ws/api/v4"
-)
-api_client = ApiClient(configuration)
-api_instance = SpotApi(api_client)
-
-'''start_date = st.date_input("选择开始日期", datetime.now().date() - timedelta(days=30))
-start_timestamp = int(datetime.combine(start_date, datetime.min.time()).timestamp())
-end_date = st.date_input("选择结束日期", datetime.now().date() - timedelta(days=30))
-end_timestamp = int(datetime.combine(end_date, datetime.min.time()).timestamp())
-def get_price_data(currency_pair):
-    try:
-        api_response = api_instance.list_candlesticks(currency_pair, _from=start_timestamp, interval='1h')
-        data = []
-        for item in api_response:
-            date = datetime.fromtimestamp(int(item[0])).strftime('%Y-%m-%d %H:00:00')
-            closing_price = float(item[2])
-            data.append((date, closing_price))
-        return data
-    except ApiException as e:
-        print("Exception when calling SpotApi->list_candlesticks: %s\n" % e)
-        return []
-
-# 获取 BTC 和 ETC 的价格数据
-btc_data = get_price_data('BTC_USDT')
-eth_data = get_price_data('ETH_USDT')
-df_btc = pd.DataFrame(btc_data, columns=['Date', 'BTC Closing Price'])
-df_eth = pd.DataFrame(eth_data, columns=['Date', 'ETH Closing Price'])
-df = pd.merge(df_btc, df_eth, on='Date', how='outer').sort_values('Date')
-
-# 显示数据表格
-st.write("BTC 和 ETH 价格信息：")
-st.dataframe(df)
-'''
 
 # Convert DataFrames to CSV
 csv1 = convert_df_to_csv(gas_fee)
 csv2 = convert_df_to_csv(btc_etf_data)
 csv3 = convert_df_to_csv(eth_etf_data)
 csv4 = convert_df_to_csv(fear_greed)
-csv5 = convert_df_to_csv(btc_rainbow)
+csv5 = convert_df_to_csv(bubble_index)
 csv6 = convert_df_to_csv(arh999)
 
 # Create a button to download each CSV
@@ -184,26 +149,33 @@ st.download_button(
 st.download_button(
     label="Download DataFrame AHR999 as CSV",
     data=csv3,
-    file_name='arh999.csv',
+    file_name='eth_etf_data.csv',
     mime='text/csv',
 )
 
 st.download_button(
     label="Download DataFrame AHR999 as CSV",
-    data=csv3,
-    file_name='arh999.csv',
+    data=csv4,
+    file_name='fear_greed.csv',
     mime='text/csv',
 )
 
 st.download_button(
     label="Download DataFrame AHR999 as CSV",
-    data=csv3,
+    data=csv5,
+    file_name='bubble_index.csv',
+    mime='text/csv',
+)
+
+st.download_button(
+    label="Download DataFrame AHR999 as CSV",
+    data=csv6,
     file_name='arh999.csv',
     mime='text/csv',
 )
 
 # Convert multiple DataFrames to a single Excel file
-excel_data = convert_multiple_dfs_to_csv([gas_fee, btc_etf_data, arh999], ['Sheet1', 'Sheet2','Sheet3'])
+excel_data = convert_multiple_dfs_to_csv([gas_fee, btc_etf_data, eth_etf_data,fear_greed,bubble_index, arh999], ['Sheet1', 'Sheet2','Sheet3','Sheet4', 'Sheet5','Sheet6'])
 
 # Create a button to download the Excel file
 st.download_button(
