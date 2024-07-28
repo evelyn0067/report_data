@@ -96,6 +96,12 @@ def convert_df_to_csv(df):
 
 # Function to convert multiple DataFrames to a single CSV file
 def convert_multiple_dfs_to_csv(dfs, names):
+    print("Converting DataFrames to Excel:")
+    print(f"DataFrames: {len(dfs)}, Names: {len(names)}")
+    
+    for df, name in zip(dfs, names):
+        print(f"Processing: {name}, Shape: {df.shape}")
+        
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
         for df, name in zip(dfs, names):
