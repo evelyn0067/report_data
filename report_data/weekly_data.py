@@ -4,6 +4,7 @@ import requests
 from dune_client.types import QueryParameter
 from dune_client.client import DuneClient
 from dune_client.query import QueryBase
+import io
 from datetime import datetime, timedelta
 
 
